@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!-- Codificación de caracteres para soportar acentos y caracteres especiales -->
+  <meta charset="UTF-8"/>
+  <!-- Adaptación a pantallas pequeñas (responsive design) -->
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <!-- Título de la pestaña del navegador -->
+  <title>Listado de Usuarios | Gimnasio</title>
+  <!-- Fuente Poppins desde Google Fonts para tipografía -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet"/>
+  <!-- Tailwind CSS: utilidades de estilo rápido -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SweetAlert2: incluido aunque no se usa en esta vista -->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Estilos personalizados -->
+  <style>
+    /* Clase para efecto de sombra tipo “glass” */
+    .glass-shadow { box-shadow: 0 0 40px rgba(8,7,16,0.6); }
+  </style>
+</head>
+<body
+  class="font-poppins min-h-screen
+         bg-[url('/img/fondo.jpg')]
+         bg-no-repeat bg-cover bg-center bg-fixed"
+>
+
+  <!-- 
+    Clase font-poppins aplica la fuente.
+    bg-cover y bg-center ajustan la imagen de fondo.
+  -->
+
+  <!-- Panel central con efecto glass -->
+  <div class="absolute top-1/2 left-1/2 w-[800px]
+              -translate-x-1/2 -translate-y-1/2
+              bg-[rgba(255,255,255,0.13)]
+              border border-[rgba(255,255,255,0.1)]
+              rounded-lg backdrop-blur-md glass-shadow
+              p-8 text-white">
+    <!-- 
+      absolute posiciona el panel relativamente al body.
+      top-1/2, left-1/2 y transform centran el panel.
+      bg-[rgba...] y backdrop-blur-md crean el efecto “glass”.
+      p-8 añade padding interno.
+      text-white define el color del texto.
+    -->
+    <h3 class="text-[32px] font-medium leading-[42px]
+               text-center mb-6">
+      Listado de Usuarios
+    </h3>
+    <!-- 
+      text-[32px] define tamaño de fuente.
+      font-medium aplica peso medio.
+      leading-[42px] altura de línea.
+      text-center centra el título.
+      mb-6 margen inferior.
+    -->
+
+    <div class="overflow-auto max-h-[60vh]">
+      <!-- 
+        overflow-auto permite scroll si la tabla es más alta que 60vh.
+        max-h-[60vh] limita la altura al 60% de la ventana.
+      -->
+      <table class="min-w-full divide-y divide-[rgba(255,255,255,0.2)]">
+        <!-- 
+          min-w-full hace que la tabla ocupe todo el ancho disponible.
+          divide-y y divide-[...] agregan líneas separadoras horizontales.
+        -->
+        <thead class="bg-[rgba(255,255,255,0.07)]">
+          <tr>
+            <!-- Encabezados de columna -->
+            <th class="px-4 py-2 text-left text-[14px] font-medium">Documento</th>
+            <th class="px-4 py-2 text-left text-[14px] font-medium">Nombres</th>
+            <th class="px-4 py-2 text-left text-[14px] font-medium">Apellidos</th>
+            <th class="px-4 py-2 text-left text-[14px] font-medium">Rango</th>
+            <th class="px-4 py-2 text-left text-[14px] font-medium">Fecha</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[rgba(255,255,255,0.1)]">
+          <!-- Repite una fila por cada usuario en la lista -->
+          <tr th:each="u : ${usuarios}">
+            <!-- th:each itera sobre la colección 'usuarios' proporcionada por el controlador -->
+            <td class="px-4 py-2 text-[14px]" th:text="${u.documento}">DOC</td>
+            <!-- th:text reemplaza el contenido del td con u.documento -->
+            <td class="px-4 py-2 text-[14px]" th:text="${u.nombres}">NOMBRE</td>
+            <td class="px-4 py-2 text-[14px]" th:text="${u.apellidos}">APELLIDO</td>
+            <td class="px-4 py-2 text-[14px]" th:text="${u.rango}">RANGO</td>
+            <td class="px-4 py-2 text-[14px]"
+                th:text="${#temporals.format(u.fecha, 'yyyy-MM-dd HH:mm:ss')}">
+              <!-- 
+                #temporals.format formatea el objeto Instant 'u.fecha' 
+                al patrón de fecha/hora especificado.
+              -->
+              FECHA
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

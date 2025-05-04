@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!-- Codificación de caracteres -->
+  <meta charset="UTF-8"/>
+  <!-- Título de la pestaña -->
+  <title>Registro | Gimnasio</title>
+  <!-- Font Awesome para iconos (si los necesitas) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+  />
+  <!-- Fuente Poppins -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SweetAlert2 -->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    /* Sombra tipo “glass” */
+    .glass-shadow {
+      box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    }
+  </style>
+</head>
+<body
+  class="
+    font-poppins
+    min-h-screen
+    bg-[url('/img/fondo.jpg')]
+    bg-no-repeat
+    bg-cover
+    bg-center
+    bg-fixed
+  "
+>
+  <!-- Formulario de registro centrado -->
+  <form
+    th:action="@{/register}"
+    method="post"
+    onsubmit="return handleRegister(event)"
+    class="
+      absolute
+      top-1/2 left-1/2
+      w-[400px]
+      -translate-x-1/2 -translate-y-1/2
+      bg-[rgba(255,255,255,0.13)]
+      border border-[rgba(255,255,255,0.1)]
+      rounded-lg
+      backdrop-blur-md
+      glass-shadow
+      p-[50px_35px]
+      text-white
+      tracking-wide
+    "
+  >
+    <!-- Título -->
+    <h3 class="text-[32px] font-medium leading-[42px] text-center">
+      Registro
+    </h3>
+
+    <!-- Documento -->
+    <label for="doc" class="block mt-[30px] text-[16px] font-medium">
+      Documento
+    </label>
+    <input
+      id="doc"
+      name="documento"
+      type="text"
+      placeholder="Documento"
+      required
+      class="
+        block w-full h-[50px]
+        bg-[rgba(255,255,255,0.07)] rounded
+        px-3 mt-2
+        text-[14px] font-light
+        placeholder-[#e5e5e5]
+      "
+    />
+
+    <!-- Contraseña -->
+    <label for="pw" class="block mt-[30px] text-[16px] font-medium">
+      Contraseña
+    </label>
+    <input
+      id="pw"
+      name="password"
+      type="password"
+      placeholder="Password"
+      required
+      class="
+        block w-full h-[50px]
+        bg-[rgba(255,255,255,0.07)] rounded
+        px-3 mt-2
+        text-[14px] font-light
+        placeholder-[#e5e5e5]
+      "
+    />
+
+    <!-- Nombres -->
+    <label for="nombres" class="block mt-[30px] text-[16px] font-medium">
+      Nombres
+    </label>
+    <input
+      id="nombres"
+      name="nombres"
+      type="text"
+      placeholder="Nombres"
+      required
+      class="
+        block w-full h-[50px]
+        bg-[rgba(255,255,255,0.07)] rounded
+        px-3 mt-2
+        text-[14px] font-light
+        placeholder-[#e5e5e5]
+      "
+    />
+
+    <!-- Apellidos -->
+    <label for="apellidos" class="block mt-[30px] text-[16px] font-medium">
+      Apellidos
+    </label>
+    <input
+      id="apellidos"
+      name="apellidos"
+      type="text"
+      placeholder="Apellidos"
+      required
+      class="
+        block w-full h-[50px]
+        bg-[rgba(255,255,255,0.07)] rounded
+        px-3 mt-2
+        text-[14px] font-light
+        placeholder-[#e5e5e5]
+      "
+    />
+
+    <!-- Botón “Registrarse” -->
+    <button
+      type="submit"
+      class="
+        mt-[50px] w-full
+        bg-white text-[#080710]
+        py-[15px] text-[18px]
+        font-semibold rounded
+      "
+    >
+      Registrarse
+    </button>
+  </form>
+
+  <!-- Script JS de validación/registro -->
+  <script>
+    function handleRegister(e) {
+      e.preventDefault(); // Evita envío normal
+      const doc = document.getElementById('doc').value.trim();
+      const pw  = document.getElementById('pw').value.trim();
+      const nom = document.getElementById('nombres').value.trim();
+      const ape = document.getElementById('apellidos').value.trim();
+
+      // Validar que todos los campos estén completos
+      if (!doc || !pw || !nom || !ape) {
+        Swal.fire('Error', 'Por favor completa todos los campos', 'warning');
+        return false;
+      }
+
+      // Envío al endpoint /register
+      fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documento: doc,
+          password: pw,
+          nombres: nom,
+          apellidos: ape
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          Swal.fire('¡Registrado!', 'Usuario creado con éxito', 'success')
+            .then(() => window.location.href = '/login');
+        } else {
+          Swal.fire('Error', 'No se pudo registrar', 'error');
+        }
+      })
+      .catch(() => Swal.fire('Error', 'Ha ocurrido un problema', 'error'));
+
+      return false;
+    }
+  </script>
+</body>
+</html>
