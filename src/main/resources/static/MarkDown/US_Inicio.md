@@ -1,8 +1,8 @@
 # AtlanticGym (Vista Usuario)
 
 # Seccion 1 (navbar)
-![Imagen logo](/imgWeb/logo.png)(US_Inicio.html)
-[Inicio](US_Inicio.html)
+![Imagen logo](/imgWeb/logo.png)(/)
+[Inicio](/)
 [Contenido](US_Anuncios.html)
 [PlanesyPrecios](#)
 [Login](/login)

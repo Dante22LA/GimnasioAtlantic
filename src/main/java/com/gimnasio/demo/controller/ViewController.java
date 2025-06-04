@@ -18,25 +18,41 @@ public class ViewController {
         this.repo = repo;
     }
 
-    // Página de login
-    @GetMapping({"/", "/login"})
-    public String loginPage() {
-        return "index"; // src/main/resources/templates/index.html
+    /**
+     * 1) Al entrar a la raíz "/", muestro la página de inicio:
+     */
+    @GetMapping("/")
+    public String homePage() {
+        // Aquí devolvemos la plantilla "/"
+        return "US_Inicio";
     }
 
-    // Página de registro
+    /**
+     * 2) GET /login: muestro la página de login.
+     */
+    @GetMapping("/login")
+    public String loginPage() {
+        return "US_Login";
+    }
+
+    /**
+     * 3) GET /register: muestro la página de registro.
+     */
     @GetMapping("/register")
     public String registerPage() {
-        return "register"; // src/main/resources/templates/register.html
+        return "US_Register";
     }
 
-    // Página de tabla de usuarios
+    /**
+     * 4) GET /tablaUsuarios: muestro la tabla de usuarios (como antes).
+     */
     @GetMapping("/tablaUsuarios")
     public String tablaUsuarios(Model model) {
         List<Usuario> usuarios = repo.findAll();
         model.addAttribute("usuarios", usuarios);
-        return "tablaUsuarios"; // src/main/resources/templates/tablaUsuarios.html
+        return "tablaUsuarios";
     }
 
-    
+    // … si tienes más páginas (por ejemplo, US_Anuncios, US_PlanesYPrecios, etc.),
+    // solo agrega más @GetMapping que devuelvan el nombre de la plantilla.
 }

@@ -5,6 +5,7 @@ import com.gimnasio.demo.payload.LoginRequest;
 import com.gimnasio.demo.payload.RegisterRequest;
 import com.gimnasio.demo.repository.UsuarioRepository;
 import org.springframework.http.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -12,17 +13,19 @@ import java.util.Optional;
 @RestController  // Indica que esta clase atiende peticiones REST y que sus métodos devuelven directamente el cuerpo de la respuesta.
 public class AuthController {
 
-    private final UsuarioRepository repo;  // Repositorio para acceder a los datos de usuarios (CRUD).
+    private final UsuarioRepository repo;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    // Constructor que inyecta el repositorio (Spring lo gestiona automáticamente).
+    // Inyectamos el repositorio y creamos un BCryptPasswordEncoder
     public AuthController(UsuarioRepository repo) {
         this.repo = repo;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     /**
      * Endpoint para registrar un nuevo usuario.
      * URL: POST /register
-     * @param req Datos de registro (documento, password, nombres, apellidos).
+     * @param req Datos de registro (documento, telefono, password, nombres, apellidos, etc.).
      * @return 200 OK si se registra; 400 Bad Request si ya existe.
      */
     @PostMapping("/register")
@@ -34,13 +37,18 @@ public class AuthController {
                      .status(HttpStatus.BAD_REQUEST)
                      .body("Ya existe un usuario con ese documento");
         }
-        // Crea la entidad Usuario y asigna los datos del request.
+
+        // Crea la entidad Usuario y asigna los datos del request (incluyendo teléfono).
         Usuario u = new Usuario();
         u.setDocumento(req.getDocumento());
-        u.setPassword(req.getPassword());
+        u.setTelefono(req.getTelefono());
+        // Hasheamos la contraseña antes de guardarla
+        String hashedPassword = passwordEncoder.encode(req.getPassword());
+        u.setPassword(hashedPassword);
         u.setNombres(req.getNombres());
         u.setApellidos(req.getApellidos());
-        u.setRango("usuario");  // Asigna un rol predeterminado.
+        // Rango por defecto; si quieres permitir que venga en el DTO, puedes usar req.getRango()
+        u.setRango("usuario");
 
         // Persiste el nuevo usuario en la base de datos.
         repo.save(u);
@@ -58,12 +66,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
         // Busca el usuario por documento (ID).
-        Optional<Usuario> usr = repo.findById(req.getDocumento());
+        Optional<Usuario> usrOpt = repo.findById(req.getDocumento());
 
-        // Comprueba que el usuario exista y que el password coincida.
-        if (usr.isPresent() && usr.get().getPassword().equals(req.getPassword())) {
-            // Credenciales válidas: retorna 200 OK.
-            return ResponseEntity.ok().build();
+        // Comprueba que el usuario exista y que la contraseña coincida (bcrypt match).
+        if (usrOpt.isPresent()) {
+            Usuario usr = usrOpt.get();
+            // matches(rawPassword, hashedPasswordStored)
+            if (passwordEncoder.matches(req.getPassword(), usr.getPassword())) {
+                // Credenciales válidas: retorna 200 OK.
+                return ResponseEntity.ok().build();
+            }
         }
 
         // Credenciales inválidas: retorna 401 Unauthorized.

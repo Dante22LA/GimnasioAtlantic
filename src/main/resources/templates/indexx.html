@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Login | Gimnasio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    .glass-shadow { box-shadow: 0 0 40px rgba(8,7,16,0.6); }
+  </style>
+</head>
+<body
+  class="font-poppins min-h-screen bg-[url('/img/fondo.jpg')] bg-no-repeat bg-cover bg-center bg-fixed">
+
+  </div>
+
+  <form
+    th:action="@{/login}"
+    method="post"
+    onsubmit="return handleLogin(event)"
+    class="absolute top-1/2 left-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2
+           bg-[rgba(255,255,255,0.13)] border border-[rgba(255,255,255,0.1)]
+           rounded-lg backdrop-blur-md glass-shadow p-[50px_35px] text-white tracking-wide">
+    <h3 class="text-[32px] font-medium leading-[42px] text-center">Login holaa</h3>
+
+    <label for="doc" class="block mt-[30px] text-[16px] font-medium">Documento</label>
+    <input id="doc" name="documento" type="text" placeholder="Tu documento" required
+           class="block w-full h-[50px] bg-[rgba(255,255,255,0.07)] rounded px-3 mt-2
+                  text-[14px] font-light placeholder-[#e5e5e5]"/>
+
+    <label for="pw" class="block mt-[30px] text-[16px] font-medium">Contraseña</label>
+    <input id="pw" name="password" type="password" placeholder="••••••••" required
+           class="block w-full h-[50px] bg-[rgba(255,255,255,0.07)] rounded px-3 mt-2
+                  text-[14px] font-light placeholder-[#e5e5e5]"/>
+
+    <button type="submit"
+            class="mt-[50px] w-full bg-white text-[#080710] py-[15px] text-[18px]
+                   font-semibold rounded">
+      Ingresar
+    </button>
+
+    <div class="mt-[30px] flex justify-end">
+      <a href="/register"
+         class="py-[10px] px-[25px] bg-blue-600 hover:bg-blue-500 rounded text-white font-medium">
+        Registrar
+      </a>
+    </div>
+  </form>
+
+  <script>
+    function handleLogin(e) {
+      e.preventDefault();
+      const doc = document.getElementById('doc').value.trim();
+      const pw  = document.getElementById('pw').value.trim();
+      if (!doc || !pw) {
+        Swal.fire('Error','Por favor completa todos los campos','warning');
+        return false;
+      }
+      fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ documento: doc, password: pw })
+      })
+      .then(res => {
+        if (res.ok) {
+          Swal.fire('¡Bienvenido!','Credenciales correctas','success')
+  .then(() => window.location.href = '//');
+
+        } else {
+          throw new Error('Credenciales incorrectas');
+        }
+      })
+      .catch(err => Swal.fire('Error', err.message, 'error'));
+      return false;
+    }
+  </script>
+</body>
+</html>

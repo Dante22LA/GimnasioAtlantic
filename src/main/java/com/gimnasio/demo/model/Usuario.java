@@ -11,6 +11,9 @@ public class Usuario {
     @Column(length = 15)  // Configura la columna: longitud máxima 15 caracteres
     private String documento;
 
+    @Column(nullable = false, length = 15)  // No acepta null; longitud máxima 15
+    private String telefono;
+
     @Column(nullable = false, length = 20)  // No acepta null; longitud máxima 20
     private String password;
 
@@ -53,6 +56,14 @@ public class Usuario {
         this.documento = documento;
     }
 
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -89,7 +100,7 @@ public class Usuario {
         return fecha;
     }
 
-    // Opcional: no exponemos setter para fecha, 
+    // Opcional: no exponemos setter para fecha,
     // así evitamos modificarla manualmente desde Java.
     // public void setFecha(Instant fecha) {
     //     this.fecha = fecha;

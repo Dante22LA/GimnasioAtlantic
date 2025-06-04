@@ -2,7 +2,7 @@
 
 # Seccion 1 (navbar principal)
 ![Imagen logo](/imgWeb/logo.png)(VA_Inicio.html)
-[Inicio](US_Inicio.html)
+[Inicio](/)
 [Contenido](US_Anuncios.html)
 [PlanesyPrecios](#)
 [Login](/login)
