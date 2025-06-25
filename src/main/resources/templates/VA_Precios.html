@@ -73,8 +73,9 @@
           <th>Acción</th>
         </tr>
       </thead>
-
+      <tbody></tbody> <!-- ¡Esto es obligatorio para insertar filas con JavaScript! -->
     </table>
+
 
   </main>
 
@@ -137,40 +138,20 @@
           data.forEach(plan => {
             const row = document.createElement("tr");
             row.innerHTML = `
-          <td>${plan.idPlan}</td>
-          <td>${plan.nombre}</td>
-          <td>${plan.duracionMeses} meses</td>
-          <td>
-            <input type="number" value="${plan.precio}" min="0" step="0.01" id="precio-${plan.idPlan}" />
-          </td>
-          <td>${plan.descripcion}</td>
-          <td>
-            <button onclick="actualizarPrecio(${plan.idPlan})">Guardar</button>
-          </td>
-        `;
+            <td>${plan.id_plan}</td>
+            <td>${plan.nombre}</td>
+            <td>${plan.duracion_meses} meses</td>
+            <td>
+            <input type="number" value="${plan.precio}" min="0" step="0.01" id="precio-${plan.id_plan}" />
+            </td>
+            <td>${plan.descripcion}</td>
+            `;
             tbody.appendChild(row);
           });
         });
     });
 
-    function actualizarPrecio(idPlan) {
-      const nuevoPrecio = document.getElementById(`precio-${idPlan}`).value;
 
-      fetch(`/api/planes/${idPlan}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ precio: nuevoPrecio })
-      })
-        .then(res => {
-          if (res.ok) {
-            alert("Precio actualizado correctamente.");
-          } else {
-            alert("Error al actualizar.");
-          }
-        });
-    }
 
   </script>
 
