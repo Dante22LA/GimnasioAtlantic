@@ -8,28 +8,25 @@ public class Plan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_plan;
+    @Column(name = "id_plan")
+    private int idPlan;
 
     private String nombre;
 
-    private int duracion_meses;
+    @Column(name = "duracion_meses")
+    private int duracionMeses;
 
     private double precio;
-
     private String descripcion;
-
-    // Puedes ignorar los campos `id` y `duracion` si no los usas
-    // private int id;
-    // private int duracion;
 
     // Getters y Setters
 
-    public int getId_plan() {
-        return id_plan;
+    public int getIdPlan() {
+        return idPlan;
     }
 
-    public void setId_plan(int id_plan) {
-        this.id_plan = id_plan;
+    public void setIdPlan(int idPlan) {
+        this.idPlan = idPlan;
     }
 
     public String getNombre() {
@@ -40,12 +37,12 @@ public class Plan {
         this.nombre = nombre;
     }
 
-    public int getDuracion_meses() {
-        return duracion_meses;
+    public int getDuracionMeses() {
+        return duracionMeses;
     }
 
-    public void setDuracion_meses(int duracion_meses) {
-        this.duracion_meses = duracion_meses;
+    public void setDuracionMeses(int duracionMeses) {
+        this.duracionMeses = duracionMeses;
     }
 
     public double getPrecio() {
@@ -64,3 +61,4 @@ public class Plan {
         this.descripcion = descripcion;
     }
 }
+

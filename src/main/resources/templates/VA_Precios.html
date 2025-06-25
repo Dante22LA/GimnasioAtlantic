@@ -138,22 +138,82 @@
           data.forEach(plan => {
             const row = document.createElement("tr");
             row.innerHTML = `
-            <td>${plan.id_plan}</td>
-            <td>${plan.nombre}</td>
-            <td>${plan.duracion_meses} meses</td>
-            <td>
-            <input type="number" value="${plan.precio}" min="0" step="0.01" id="precio-${plan.id_plan}" />
-            </td>
-            <td>${plan.descripcion}</td>
-            `;
+    <td><input type="text" value="${plan.idPlan}" readonly class="form-control-plaintext" /></td>
+    <td><input type="text" value="${plan.nombre}" id="nombre-${plan.idPlan}" class="form-control" /></td>
+    <td><input type="number" value="${plan.duracionMeses}" id="duracion-${plan.idPlan}" class="form-control" /></td>
+    <td><input type="number" value="${plan.precio}" min="0" step="0.01" id="precio-${plan.idPlan}" class="form-control" /></td>
+    <td><input type="text" value="${plan.descripcion}" id="descripcion-${plan.idPlan}" class="form-control" /></td>
+    <td>
+      <button class="btn btn-primary btn-sm" onclick="guardarCambios(${plan.idPlan})">Guardar</button>
+      <button class="btn btn-danger btn-sm" onclick="eliminarPlan(${plan.idPlan})">Eliminar</button>
+      <span class="text-success ms-2" id="msg-${plan.idPlan}" style="display:none;">✔</span>
+    </td>
+  `;
             tbody.appendChild(row);
           });
         });
     });
 
-
-
   </script>
+
+  <script>
+    // Función para guardar cambios de un plan específico
+    function guardarCambios(idPlan) {
+      const nombre = document.getElementById(`nombre-${idPlan}`).value;
+      const duracion = parseInt(document.getElementById(`duracion-${idPlan}`).value);
+      const precio = parseFloat(document.getElementById(`precio-${idPlan}`).value);
+      const descripcion = document.getElementById(`descripcion-${idPlan}`).value;
+
+      const planActualizado = {
+        nombre: nombre,
+        duracionMeses: duracion,
+        precio: precio,
+        descripcion: descripcion
+      };
+
+      fetch(`/api/planes/${idPlan}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(planActualizado)
+      })
+        .then(response => {
+          if (response.ok) {
+            document.getElementById(`msg-${idPlan}`).style.display = "inline";
+            setTimeout(() => {
+              document.getElementById(`msg-${idPlan}`).style.display = "none";
+            }, 2000);
+          } else {
+            alert("Error al actualizar el plan");
+          }
+        })
+        .catch(error => {
+          console.error("Error en la actualización:", error);
+        });
+    }
+
+    // Función para eliminar un plan
+    function eliminarPlan(idPlan) {
+      if (!confirm(`¿Estás seguro de eliminar el plan con ID ${idPlan}?`)) return;
+
+      fetch(`/api/planes/${idPlan}`, {
+        method: 'DELETE'
+      })
+        .then(response => {
+          if (response.ok) {
+            alert("Plan eliminado correctamente");
+            location.reload();
+          } else {
+            alert("Error al eliminar el plan");
+          }
+        })
+        .catch(error => {
+          console.error("Error en la eliminación:", error);
+        });
+    }
+  </script>
+
 
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
