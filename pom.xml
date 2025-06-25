@@ -73,6 +73,12 @@
       <version>6.1.2</version>  <!-- Ajusta la versión a la que uses en tu proyecto -->
     </dependency>
 
+    <dependency>
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>1.6</version>
+    </dependency>
+
 
   </dependencies>
 

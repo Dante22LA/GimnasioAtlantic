@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -9,28 +10,18 @@
 
   <link href="assets/img/favicon.png" rel="icon" />
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-    rel="stylesheet"
-  />
+    rel="stylesheet" />
 
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-  <link
-    href="assets/vendor/bootstrap-icons/bootstrap-icons.css"
-    rel="stylesheet"
-  />
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
   <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
-  <link
-    href="assets/vendor/glightbox/css/glightbox.min.css"
-    rel="stylesheet"
-  />
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
 
   <link href="assets/css/main.css" rel="stylesheet" />
@@ -45,13 +36,17 @@
       </a>
       <nav id="navmenu" class="navmenu">
         <ul>
+          <li><a href="/datos-usuario" class="active">Datos Usuario</a></li>
           <li><a href="/" class="active">Inicio</a></li>
           <li><a href="US_Anuncios.html" class="active">Contenido</a></li>
           <li><a href="US_PlanesYPrecios.html" class="active">Planes y Precios</a></li>
+          <li><a href="VA_Inicio.html" class="active">Admin</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
-      <a class="btn-getstarted" href="/login">Login</a>
+      <a id="btnLogin" class="btn-getstarted" href="/login" style="display: none;">Login</a>
+      <a id="btnLogout" class="btn-getstarted" href="/datos-usuario" onclick="cerrarSesion()" style="display: none;">Cerrar
+        Sesión</a>
     </div>
   </header>
   <!-- ======= End Header ======= -->
@@ -84,35 +79,18 @@
                       <ul>
                         <div class="col-lg-12">
                           <!-- FORMULARIO: quitamos action y method -->
-                          <form
-                            id="loginForm"
-                            class="php-email-form"
-                            data-aos="fade-up"
-                            data-aos-delay="200"
-                          >
+                          <form id="loginForm" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
                             <div class="row gy-4">
                               <!-- Documento (DNI) -->
                               <div class="col-md-12">
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  id="documento"
-                                  name="documento"
-                                  placeholder="Documento"
-                                  required
-                                />
+                                <input type="text" class="form-control" id="documento" name="documento"
+                                  placeholder="Documento" required />
                               </div>
 
                               <!-- Contraseña -->
                               <div class="col-md-12">
-                                <input
-                                  type="password"
-                                  class="form-control"
-                                  id="password"
-                                  name="password"
-                                  placeholder="Contraseña"
-                                  required
-                                />
+                                <input type="password" class="form-control" id="password" name="password"
+                                  placeholder="Contraseña" required />
                               </div>
 
                               <!-- Botones -->
@@ -153,9 +131,7 @@
           </a>
           <div class="social-links d-flex mt-4">
             <a href="https://www.tiktok.com/@atlantic.gym8"><i class="fab fa-tiktok"></i></a>
-            <a href="https://www.facebook.com/Antlanticgym"
-              ><i class="bi bi-facebook"></i
-            ></a>
+            <a href="https://www.facebook.com/Antlanticgym"><i class="bi bi-facebook"></i></a>
             <a href="https://www.instagram.com/atlanticgm/"><i class="bi bi-instagram"></i></a>
           </div>
         </div>
@@ -195,12 +171,8 @@
   <!-- ======= End Footer ======= -->
 
   <!-- Scroll-top y Preloader (igual que tu plantilla) -->
-  <a
-    href="#"
-    id="scroll-top"
-    class="scroll-top d-flex align-items-center justify-content-center"
-    ><i class="bi bi-arrow-up-short"></i
-  ></a>
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
   <div id="preloader"></div>
 
   <!-- Scripts de terceros -->
@@ -220,11 +192,9 @@
     document.getElementById("loginForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      // Capturamos los valores de los inputs
       const documento = document.getElementById("documento").value.trim();
       const password = document.getElementById("password").value;
 
-      // Preparamos el JSON que espera tu LoginRequest
       const payload = {
         documento: documento,
         password: password
@@ -240,14 +210,20 @@
         });
 
         if (response.ok) {
-          // Si login OK, redirige a la página principal o dashboard que prefieras
-          // Por ejemplo: window.location.href = "/home"; 
-          // Si no la tienes aún, puedes redirigir a tu página de inicio:
-          window.location.href = "/"; 
+          const data = await response.json(); // <-- AHORA PARSEAMOS LA RESPUESTA JSON
+          if (data && data.dni) { // <-- VERIFICAMOS SI EL JSON CONTIENE EL 'dni'
+            // Login OK, redirige a US_Usuarios.html pasando el DNI en la URL (¡INSEGURO!)
+            // Asegúrate que US_Usuarios.html exista en la misma carpeta o ruta accesible
+            localStorage.setItem("dniUsuario", data.dni); // almacena el DNI de forma persistente
+            window.location.href = "/datos-usuario"; // redirige sin pasar el dni en la URL
+          } else {
+            // Si por alguna razón el backend no devolvió el DNI esperado
+            alert("Login exitoso, pero no se pudo obtener la información del DNI.");
+            window.location.href = "/"; // Redirige a inicio o muestra un error específico
+          }
         } else if (response.status === 401) {
           alert("Credenciales inválidas. Verifica tu documento y contraseña.");
         } else {
-          // Si el backend devolvió otro error (400, 500, etc.), mostramos el texto que envíe
           const errorText = await response.text();
           alert("Error: " + errorText);
         }
@@ -258,5 +234,29 @@
     });
   </script>
   <!-- ===== Fin del script ===== -->
+  <script>
+    // Mostrar u ocultar los botones según si hay sesión iniciada
+    document.addEventListener("DOMContentLoaded", function () {
+      const btnLogin = document.getElementById("btnLogin");
+      const btnLogout = document.getElementById("btnLogout");
+      const dni = localStorage.getItem("dniUsuario");
+
+      if (dni) {
+        btnLogin.style.display = "none";
+        btnLogout.style.display = "inline-block";
+      } else {
+        btnLogin.style.display = "inline-block";
+        btnLogout.style.display = "none";
+      }
+    });
+
+    // Función de cierre de sesión
+    function cerrarSesion() {
+      localStorage.removeItem("dniUsuario");
+      window.location.href = "/US_Login.html";
+    }
+  </script>
+
 </body>
+
 </html>
