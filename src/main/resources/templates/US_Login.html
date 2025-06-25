@@ -45,7 +45,7 @@
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
       <a id="btnLogin" class="btn-getstarted" href="/login" style="display: none;">Login</a>
-      <a id="btnLogout" class="btn-getstarted" href="/datos-usuario" onclick="cerrarSesion()" style="display: none;">Cerrar
+      <a id="btnLogout" class="btn-getstarted" href="#" onclick="cerrarSesion()" style="display: none;">Cerrar
         Sesión</a>
     </div>
   </header>
@@ -234,28 +234,7 @@
     });
   </script>
   <!-- ===== Fin del script ===== -->
-  <script>
-    // Mostrar u ocultar los botones según si hay sesión iniciada
-    document.addEventListener("DOMContentLoaded", function () {
-      const btnLogin = document.getElementById("btnLogin");
-      const btnLogout = document.getElementById("btnLogout");
-      const dni = localStorage.getItem("dniUsuario");
-
-      if (dni) {
-        btnLogin.style.display = "none";
-        btnLogout.style.display = "inline-block";
-      } else {
-        btnLogin.style.display = "inline-block";
-        btnLogout.style.display = "none";
-      }
-    });
-
-    // Función de cierre de sesión
-    function cerrarSesion() {
-      localStorage.removeItem("dniUsuario");
-      window.location.href = "/US_Login.html";
-    }
-  </script>
+  <script src="assets/js/session.js"></script>
 
 </body>
 

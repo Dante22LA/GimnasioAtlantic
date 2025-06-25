@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -34,15 +35,17 @@
       </a>
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="US_DatosUsuario.html" class="active">Datos Usuario</a></li>
-                <li><a href="/" class="active">Inicio</a></li>
-                <li><a href="US_Anuncios.html" class="active">Contenido</a></li>
-                <li><a href="US_PlanesYPrecios.html" class="active">Planes y Precios</a></li>
-                <li><a href="VA_Inicio.html" class="active">Admin</a></li>
+          <li><a href="/datos-usuario" class="active">Datos Usuario</a></li>
+          <li><a href="/" class="active">Inicio</a></li>
+          <li><a href="US_Anuncios.html" class="active">Contenido</a></li>
+          <li><a href="US_PlanesYPrecios.html" class="active">Planes y Precios</a></li>
+          <li><a href="VA_Inicio.html" class="active">Admin</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
-      <a class="btn-getstarted" href="/login">Login</a>
+      <a id="btnLogin" class="btn-getstarted" href="/login" style="display: none;">Login</a>
+      <a id="btnLogout" class="btn-getstarted" href="#" onclick="cerrarSesion()" style="display: none;">Cerrar
+        Sesión</a>
     </div>
   </header>
 
@@ -305,5 +308,7 @@
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
 
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/session.js"></script>
 </body>
+
 </html>
