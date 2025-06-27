@@ -85,6 +85,11 @@ public class ViewController {
         return "VA_Precios"; // sin .html, Spring buscará en templates/VA_Precios.html
     }
 
+    @GetMapping("/planes")
+    public String planes() {
+        return "US_PlanesYPrecios";
+    }
+
     // … si tienes más páginas (por ejemplo, US_Anuncios, US_PlanesYPrecios, etc.),
     // solo agrega más @GetMapping que devuelvan el nombre de la plantilla.
 }
