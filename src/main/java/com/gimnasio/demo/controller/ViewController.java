@@ -60,17 +60,12 @@ public class ViewController {
         return "tablaUsuarios";
     }
 
-    @GetMapping("/pagoA")
-    public String pagoAPage() {
-        return "US_PagoA";
-    }
-
-    @GetMapping("/pagoB")
+    @GetMapping("/pago2")
     public String pagoBPage() {
         return "US_PagoB";
     }
 
-    @GetMapping("/pagoC")
+    @GetMapping("/pago3")
     public String pagoCPage() {
         return "US_PagoC";
     }
@@ -88,6 +83,11 @@ public class ViewController {
     @GetMapping("/planes")
     public String planes() {
         return "US_PlanesYPrecios";
+    }
+
+    @GetMapping("/pago1")
+    public String pagoAPage() {
+        return "US_PagoA";
     }
 
     // … si tienes más páginas (por ejemplo, US_Anuncios, US_PlanesYPrecios, etc.),
