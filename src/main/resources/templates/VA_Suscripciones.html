@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suscripciones - Boletas</title>
+  <link href="/assets/css/main.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <header class="p-3 bg-dark text-white text-center">
+    <h1>Historial de Suscripciones</h1>
+  </header>
+
+  <main class="container mt-5">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>ID Boleta</th>
+          <th>Documento</th>
+          <th>ID Plan</th>
+          <th><strong>Nombre del Plan</strong></th>
+          <th>Fecha</th>
+          <th>Monto</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+
+      <tbody id="tabla-boletas">
+        <!-- Aquí se cargan las boletas dinámicamente -->
+      </tbody>
+    </table>
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    AtlanticGym © 2025
+  </footer>
+
+  <script>
+    async function cargarBoletas() {
+      try {
+        const response = await fetch("/api/boletas");
+        if (!response.ok) throw new Error("Error al obtener las boletas");
+
+        const boletas = await response.json();
+        const tabla = document.getElementById("tabla-boletas");
+        tabla.innerHTML = "";
+
+        boletas.forEach(boleta => {
+          const fila = document.createElement("tr");
+          fila.innerHTML = `
+  <td>${boleta.idBoleta}</td>
+  <td>${boleta.documentoUsuario}</td>
+  <td>${boleta.plan.idPlan}</td>
+  <td>${boleta.plan.nombre}</td>
+  <td>${new Date(boleta.fechaEmision).toLocaleString()}</td>
+  <td>S/. ${boleta.montoTotal.toFixed(2)}</td>
+  <td>
+    <button class="btn btn-danger btn-sm" onclick="eliminarBoleta(${boleta.idBoleta})">Eliminar</button>
+  </td>
+`;
+
+          tabla.appendChild(fila);
+        });
+      } catch (err) {
+        console.error("Error:", err);
+        alert("No se pudieron cargar las boletas.");
+      }
+    }
+    async function eliminarBoleta(idBoleta) {
+      if (!confirm("¿Estás seguro de eliminar esta boleta?")) return;
+
+      try {
+        const response = await fetch(`/api/boletas/${idBoleta}`, {
+          method: "DELETE"
+        });
+
+        if (response.ok) {
+          alert("Boleta eliminada correctamente.");
+          cargarBoletas(); // Recargar tabla
+        } else {
+          const msg = await response.text();
+          alert("Error al eliminar boleta: " + msg);
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        alert("No se pudo eliminar la boleta.");
+      }
+    }
+
+
+    window.addEventListener("DOMContentLoaded", cargarBoletas);
+  </script>
+</body>
+
+</html>

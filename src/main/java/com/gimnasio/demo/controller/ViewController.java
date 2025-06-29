@@ -90,6 +90,11 @@ public class ViewController {
         return "US_PagoA";
     }
 
+    @GetMapping("/suscripciones")
+    public String vistaSuscripciones() {
+        return "VA_Suscripciones";
+    }
+
     // … si tienes más páginas (por ejemplo, US_Anuncios, US_PlanesYPrecios, etc.),
     // solo agrega más @GetMapping que devuelvan el nombre de la plantilla.
 }

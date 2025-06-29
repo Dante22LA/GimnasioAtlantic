@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pago - Plan B</title>
   <link href="/assets/css/main.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
+
 <body>
   <header class="p-3 bg-dark text-white text-center">
     <h1>Confirmar suscripción al Plan B</h1>
@@ -15,11 +17,33 @@
   <main class="container mt-5">
     <div class="card shadow p-4">
       <h3 class="mb-3">Detalles del Plan B</h3>
-      <ul>
-        <li><strong>Duración:</strong> 3 meses</li>
-        <li><strong>Precio:</strong> S/. 138</li>
-        <li><strong>Descripción:</strong> Cambiar</li>
+      <ul id="detallesPlan">
+        <li><strong>Duración:</strong> <span id="duracion">...</span></li>
+        <li><strong>Precio:</strong> S/. <span id="precio">...</span></li>
+        <li><strong>Descripción:</strong> <span id="descripcion">...</span></li>
       </ul>
+
+      <script>
+        const idPlan = 2; // Plan B
+
+        async function cargarDetallesPlan() {
+          try {
+            const res = await fetch(`/api/planes/${idPlan}`);
+            if (!res.ok) throw new Error("No se pudo cargar el plan");
+
+            const plan = await res.json();
+            document.getElementById("duracion").textContent = `${plan.duracionMeses} mes(es)`;
+            document.getElementById("precio").textContent = plan.precio.toFixed(2);
+            document.getElementById("descripcion").textContent = plan.descripcion;
+
+          } catch (err) {
+            console.error("Error cargando el plan:", err);
+            alert("No se pudieron cargar los detalles del plan.");
+          }
+        }
+
+        window.addEventListener("DOMContentLoaded", cargarDetallesPlan);
+      </script>
 
       <button id="btnPagar" class="btn btn-success mt-4">Confirmar Suscripción</button>
     </div>
@@ -66,8 +90,14 @@
       }
     });
   </script>
+  <script>
+    const dniUsuario = localStorage.getItem("dniUsuario");
+    console.log("DNI cargado desde localStorage:", dniUsuario); // <-- AÑADIDO
+    if (!dniUsuario) {
+      alert("No has iniciado sesión. Redirigiendo al login.");
+      window.location.href = "/login";
+    }
+  </script>
 </body>
+
 </html>
-
-
-

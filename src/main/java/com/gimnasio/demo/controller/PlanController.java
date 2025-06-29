@@ -49,5 +49,12 @@ public class PlanController {
     public ResponseEntity<?> listarPlanes() {
         return ResponseEntity.ok(planRepository.findAll());
     }
-}
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Plan> obtenerPlanPorId(@PathVariable int id) {
+        return planRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+}

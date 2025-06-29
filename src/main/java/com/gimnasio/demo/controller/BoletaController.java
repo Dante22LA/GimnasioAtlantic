@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -46,8 +47,19 @@ public class BoletaController {
         boletaRepository.save(boleta);
         return ResponseEntity.ok("Boleta registrada correctamente");
     }
+
+    @GetMapping("/boletas")
+    public List<Boleta> listarBoletas() {
+        return boletaRepository.findAll();
+    }
+
+    @DeleteMapping("/boletas/{id}")
+    public ResponseEntity<?> eliminarBoleta(@PathVariable int id) {
+        if (!boletaRepository.existsById(id)) {
+            return ResponseEntity.status(404).body("Boleta no encontrada");
+        }
+        boletaRepository.deleteById(id);
+        return ResponseEntity.ok("Boleta eliminada");
+    }
+
 }
-
-
-
-
