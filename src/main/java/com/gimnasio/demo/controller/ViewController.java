@@ -95,6 +95,11 @@ public class ViewController {
         return "VA_Suscripciones";
     }
 
+    @GetMapping("/admin-panel")
+    public String mostrarPanelAdmin() {
+        return "VA_Inicio"; // corresponde a templates/miVistaAdmin.html
+    }
+
     // … si tienes más páginas (por ejemplo, US_Anuncios, US_PlanesYPrecios, etc.),
     // solo agrega más @GetMapping que devuelvan el nombre de la plantilla.
 }

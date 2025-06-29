@@ -1,16 +1,16 @@
 package com.gimnasio.demo.payload;
 
-// DTO para mapear los datos enviados al registrar un usuario (endpoint /register)
 public class RegisterRequest {
-    private String documento; // Documento de identidad (clave primaria del usuario)
-    private String telefono;  // Teléfono del usuario
-    private String password;  // Contraseña para la nueva cuenta
-    private String nombres;   // Nombres del usuario
-    private String apellidos; // Apellidos del usuario
-    private String rango;     // Rango del usuario (e.g. "usuario", "admin", etc.)
+    private String documento;
+    private String telefono;
+    private String password;
+    private String nombres;
+    private String apellidos;
 
-    // --- Getters y setters ---
+    // NUEVO: ahora usamos el id del tipo de usuario (1: admin, 2: usuario)
+    private Integer idTipo;
 
+    // --- Getters y Setters ---
     public String getDocumento() {
         return documento;
     }
@@ -51,11 +51,12 @@ public class RegisterRequest {
         this.apellidos = apellidos;
     }
 
-    public String getRango() {
-        return rango;
+    public Integer getIdTipo() {
+        return idTipo;
     }
 
-    public void setRango(String rango) {
-        this.rango = rango;
+    public void setIdTipo(Integer idTipo) {
+        this.idTipo = idTipo;
     }
 }
+

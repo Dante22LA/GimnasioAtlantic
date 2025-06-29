@@ -36,11 +36,11 @@
       </a>
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="US_DatosUsuario.html" class="active">Datos Usuario</a></li>
-                <li><a href="/" class="active">Inicio</a></li>
-                <li><a href="US_Anuncios.html" class="active">Contenido</a></li>
-                <li><a href="/planes" class="active">Planes y Precios</a></li>
-                <li><a href="VA_Inicio.html" class="active">Admin</a></li>
+          <li><a href="/datos-usuario" class="active">Datos Usuario</a></li>
+          <li><a href="/" class="active">Inicio</a></li>
+          <li><a href="US_Anuncios.html" class="active">Contenido</a></li>
+          <li><a href="/planes" class="active">Planes y Precios</a></li>
+          <li><a href="/admin-panel" class="active">Admin</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -231,10 +231,9 @@
           password: password,
           nombres: nombres,
           apellidos: apellidos,
-          // Si en tu DTO permites enviar el rango desde el frontend, úsalo; 
-          // si siempre quieres "usuario", puedes eliminar esta línea o dejar fija:
-          rango: "usuario"
+          idTipo: 2 // ← Esto fuerza que siempre se registre como usuario normal
         };
+
 
         try {
           const response = await fetch("/register", {

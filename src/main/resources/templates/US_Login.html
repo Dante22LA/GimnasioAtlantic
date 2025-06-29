@@ -40,7 +40,7 @@
           <li><a href="/" class="active">Inicio</a></li>
           <li><a href="US_Anuncios.html" class="active">Contenido</a></li>
           <li><a href="/planes" class="active">Planes y Precios</a></li>
-          <li><a href="VA_Inicio.html" class="active">Admin</a></li>
+          <li><a href="/admin-panel" class="active">Admin</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -210,16 +210,14 @@
         });
 
         if (response.ok) {
-          const data = await response.json(); // <-- AHORA PARSEAMOS LA RESPUESTA JSON
-          if (data && data.dni) { // <-- VERIFICAMOS SI EL JSON CONTIENE EL 'dni'
-            // Login OK, redirige a US_Usuarios.html pasando el DNI en la URL (¡INSEGURO!)
-            // Asegúrate que US_Usuarios.html exista en la misma carpeta o ruta accesible
-            localStorage.setItem("dniUsuario", data.dni); // almacena el DNI de forma persistente
-            window.location.href = "/datos-usuario"; // redirige sin pasar el dni en la URL
+          const data = await response.json(); // Parseamos la respuesta JSON
+          if (data && data.dni && data.rango) { // Verificamos que tenga dni y rango
+            localStorage.setItem("dniUsuario", data.dni);
+            localStorage.setItem("rangoUsuario", data.rango); // <-- Esta línea es clave
+            window.location.href = "/"; // Redirige a la página protegida
           } else {
-            // Si por alguna razón el backend no devolvió el DNI esperado
-            alert("Login exitoso, pero no se pudo obtener la información del DNI.");
-            window.location.href = "/"; // Redirige a inicio o muestra un error específico
+            alert("Login exitoso, pero no se pudo obtener toda la información del usuario.");
+            window.location.href = "/";
           }
         } else if (response.status === 401) {
           alert("Credenciales inválidas. Verifica tu documento y contraseña.");
@@ -233,6 +231,7 @@
       }
     });
   </script>
+
   <!-- ===== Fin del script ===== -->
   <script src="assets/js/session.js"></script>
 

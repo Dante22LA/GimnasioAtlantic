@@ -3,36 +3,31 @@ package com.gimnasio.demo.model;
 import jakarta.persistence.*;
 import java.time.Instant;
 
-@Entity  // Marca esta clase como una entidad JPA que se mapea a una tabla de la BD
-@Table(name = "usuarios")  // Especifica el nombre de la tabla en la base de datos
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
 
-    @Id  // Define la clave primaria de la entidad
-    @Column(length = 15)  // Configura la columna: longitud máxima 15 caracteres
+    @Id
+    @Column(length = 15)
     private String documento;
 
-    @Column(nullable = false, length = 15)  // No acepta null; longitud máxima 15
+    @Column(nullable = false, length = 15)
     private String telefono;
 
-    @Column(nullable = false, length = 20)  // No acepta null; longitud máxima 20
+    @Column(nullable = false, length = 20)
     private String password;
 
-    @Column(nullable = false, length = 50)  // No acepta null; longitud máxima 50
+    @Column(nullable = false, length = 50)
     private String nombres;
 
-    @Column(nullable = false, length = 50)  // No acepta null; longitud máxima 50
+    @Column(nullable = false, length = 50)
     private String apellidos;
 
-    @Column(nullable = false, length = 10)  // No acepta null; longitud máxima 10
-    private String rango = "usuario";  // Valor por defecto en el objeto Java
+    // NUEVO: Relación con tipos_usuario
+    @ManyToOne
+    @JoinColumn(name = "id_tipo", referencedColumnName = "id_tipo")
+    private TipoUsuario tipoUsuario;
 
-    /**
-     * Fecha de creación del registro.
-     * insertable = false & updatable = false:
-     *   → JPA no incluirá este campo en INSERT ni en UPDATE.
-     * columnDefinition indica al DDL que use CURRENT_TIMESTAMP por defecto.
-     * MySQL rellenará automáticamente este campo con la hora actual.
-     */
     @Column(
         name = "fecha",
         nullable = false,
@@ -46,7 +41,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    //--- Getters y setters (POJO estándar) ---
+    // --- Getters y Setters ---
 
     public String getDocumento() {
         return documento;
@@ -88,21 +83,16 @@ public class Usuario {
         this.apellidos = apellidos;
     }
 
-    public String getRango() {
-        return rango;
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
     }
 
-    public void setRango(String rango) {
-        this.rango = rango;
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     public Instant getFecha() {
         return fecha;
     }
-
-    // Opcional: no exponemos setter para fecha,
-    // así evitamos modificarla manualmente desde Java.
-    // public void setFecha(Instant fecha) {
-    //     this.fecha = fecha;
-    // }
 }
+
