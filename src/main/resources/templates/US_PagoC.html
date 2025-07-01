@@ -3,101 +3,162 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pago - Plan C</title>
-  <link href="/assets/css/main.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .card {
+      max-width: 500px;
+      margin: auto;
+      margin-top: 60px;
+      padding: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control::placeholder {
+      color: #ccc;
+    }
+
+    .yape-section, .tarjeta-section {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
-  <header class="p-3 bg-dark text-white text-center">
-    <h1>Confirmar suscripción al Plan C</h1>
-  </header>
 
-  <main class="container mt-5">
-    <div class="card shadow p-4">
-      <h3 class="mb-3">Detalles del Plan C</h3>
-      <ul id="detallesPlan">
-        <li><strong>Duración:</strong> <span id="duracion">...</span></li>
-        <li><strong>Precio:</strong> S/. <span id="precio">...</span></li>
-        <li><strong>Descripción:</strong> <span id="descripcion">...</span></li>
-      </ul>
+  <div class="card">
+    <h4 class="text-center mb-4">💳 Pago del Plan C</h4>
 
-      <script>
-        const idPlan = 3; // Plan C
+    <form id="pagoForm">
+      <!-- Método de Pago -->
+      <div class="mb-3">
+        <label for="metodoPago" class="form-label">Método de Pago</label>
+        <select id="metodoPago" class="form-select" required>
+          <option value="">Seleccionar</option>
+          <option value="tarjeta">Tarjeta</option>
+          <option value="yape">Yape</option>
+        </select>
+      </div>
 
-        async function cargarDetallesPlan() {
-          try {
-            const res = await fetch(`/api/planes/${idPlan}`);
-            if (!res.ok) throw new Error("No se pudo cargar el plan");
+      <!-- TARJETA -->
+      <div class="tarjeta-section">
+        <div class="mb-3">
+          <label for="nombreTitular" class="form-label">Nombre del Titular</label>
+          <input type="text" class="form-control" id="nombreTitular" placeholder="Juan Pérez">
+        </div>
 
-            const plan = await res.json();
-            document.getElementById("duracion").textContent = `${plan.duracionMeses} mes(es)`;
-            document.getElementById("precio").textContent = plan.precio.toFixed(2);
-            document.getElementById("descripcion").textContent = plan.descripcion;
+        <div class="mb-3">
+          <label for="numeroTarjeta" class="form-label">Número de Tarjeta</label>
+          <input type="text" class="form-control" id="numeroTarjeta" maxlength="19"
+            placeholder="XXXX-XXXX-XXXX-XXXX">
+        </div>
 
-          } catch (err) {
-            console.error("Error cargando el plan:", err);
-            alert("No se pudieron cargar los detalles del plan.");
-          }
-        }
+        <div class="row mb-3">
+          <div class="col">
+            <label for="vencimiento" class="form-label">Vencimiento</label>
+            <input type="text" class="form-control" id="vencimiento" placeholder="MM/AA"
+              pattern="^(0[1-9]|1[0-2])\/\d{2}$">
+          </div>
+          <div class="col">
+            <label for="cvv" class="form-label">CVV</label>
+            <input type="text" class="form-control" id="cvv" maxlength="3" pattern="\d{3}">
+          </div>
+        </div>
+      </div>
 
-        window.addEventListener("DOMContentLoaded", cargarDetallesPlan);
-      </script>
+      <!-- YAPE -->
+      <div class="yape-section">
+        <div class="mb-3">
+          <label for="numeroYape" class="form-label">Número Yape</label>
+          <input type="text" class="form-control" id="numeroYape" placeholder="Ej: 987654321" pattern="\d{9}">
+        </div>
+        <div class="mb-3">
+          <label for="codigoYape" class="form-label">Código de Verificación</label>
+          <input type="text" class="form-control" id="codigoYape" placeholder="Ej: 123456" pattern="\d{6}">
+        </div>
+      </div>
 
-      <button id="btnPagar" class="btn btn-success mt-4">Confirmar Suscripción</button>
-    </div>
-  </main>
+      <button type="submit" class="btn btn-primary w-100" id="btnPagar">Pagar</button>
+    </form>
+  </div>
 
-  <footer class="bg-dark text-white text-center py-3 mt-5">
-    AtlanticGym © 2025
-  </footer>
-
+  <!-- Scripts -->
   <script>
-    document.getElementById("btnPagar").addEventListener("click", async () => {
-      const documento = localStorage.getItem("dniUsuario");
+    const metodoPago = document.getElementById("metodoPago");
+    metodoPago.addEventListener("change", function () {
+      document.querySelector(".tarjeta-section").style.display = metodoPago.value === "tarjeta" ? "block" : "none";
+      document.querySelector(".yape-section").style.display = metodoPago.value === "yape" ? "block" : "none";
+    });
 
+    document.getElementById('vencimiento').addEventListener('input', function (e) {
+      let value = e.target.value.replace(/[^\d]/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    const tarjetaInput = document.getElementById("numeroTarjeta");
+    tarjetaInput.addEventListener("input", () => {
+      let value = tarjetaInput.value.replace(/\D/g, "").substring(0, 16);
+      tarjetaInput.value = value.match(/.{1,4}/g)?.join("-").substring(0, 19) || "";
+    });
+
+    async function cargarPrecioPlan() {
+      try {
+        const response = await fetch("/api/planes/3");
+        if (!response.ok) throw new Error("No se pudo obtener el plan");
+
+        const plan = await response.json();
+        document.getElementById("btnPagar").textContent = `Pagar S/${plan.precio.toFixed(2)}`;
+      } catch (e) {
+        console.error("Error al cargar el precio:", e);
+        document.getElementById("btnPagar").textContent = "Pagar (Error)";
+      }
+    }
+
+    cargarPrecioPlan();
+
+    document.getElementById("pagoForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const documento = localStorage.getItem("dniUsuario");
       if (!documento) {
-        alert("Debes iniciar sesión para suscribirte.");
+        alert("No has iniciado sesión. Redirigiendo al login.");
         window.location.href = "/login";
         return;
       }
 
-      const data = {
+      const payload = {
         documento: documento,
         idPlan: 3
       };
 
       try {
-        const response = await fetch("/api/pago", {
+        const response = await fetch("/api/pagos", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
 
         if (response.ok) {
-          alert("¡Suscripción al Plan C realizada con éxito!");
-          window.location.href = "/planes";
+          alert("✅ Pago registrado con éxito.");
+          window.location.href = "/datos-usuario";
         } else {
-          const msg = await response.text();
-          alert("Error al procesar el pago: " + msg);
+          const errorText = await response.text();
+          alert("❌ Error al procesar el pago: " + errorText);
         }
       } catch (err) {
-        console.error("Error al enviar solicitud:", err);
-        alert("Ocurrió un error al contactar al servidor.");
+        alert("❌ Error de conexión.");
+        console.error(err);
       }
     });
-  </script>
-  <script>
-    const dniUsuario = localStorage.getItem("dniUsuario");
-    console.log("DNI cargado desde localStorage:", dniUsuario); // <-- AÑADIDO
-    if (!dniUsuario) {
-      alert("No has iniciado sesión. Redirigiendo al login.");
-      window.location.href = "/login";
-    }
   </script>
 </body>
 
 </html>
+
