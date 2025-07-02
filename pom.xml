@@ -56,21 +56,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-      <!-- excluimos Mockito si no lo necesitas -->
-      <!--
-      <exclusions>
-        <exclusion>
-          <groupId>org.mockito</groupId>
-          <artifactId>mockito-core</artifactId>
-        </exclusion>
-      </exclusions>
-      -->
     </dependency>
 
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-crypto</artifactId>
-      <version>6.1.2</version>  <!-- Ajusta la versión a la que uses en tu proyecto -->
+      <version>6.1.2</version>
     </dependency>
 
     <dependency>
