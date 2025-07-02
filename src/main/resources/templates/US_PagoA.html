@@ -182,6 +182,14 @@
 
     cargarPrecioPlan();
   </script>
+  <script>
+    const dniUsuario = localStorage.getItem("dniUsuario");
+    console.log("DNI cargado desde localStorage:", dniUsuario); // <-- AÑADIDO
+    if (!dniUsuario) {
+      alert("No has iniciado sesión. Redirigiendo al login.");
+      window.location.href = "/login";
+    }
+  </script>
 
 </body>
 

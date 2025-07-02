@@ -22,7 +22,8 @@
       color: #ccc;
     }
 
-    .yape-section, .tarjeta-section {
+    .yape-section,
+    .tarjeta-section {
       display: none;
     }
   </style>
@@ -53,8 +54,7 @@
 
         <div class="mb-3">
           <label for="numeroTarjeta" class="form-label">Número de Tarjeta</label>
-          <input type="text" class="form-control" id="numeroTarjeta" maxlength="19"
-            placeholder="XXXX-XXXX-XXXX-XXXX">
+          <input type="text" class="form-control" id="numeroTarjeta" maxlength="19" placeholder="XXXX-XXXX-XXXX-XXXX">
         </div>
 
         <div class="row mb-3">
@@ -158,7 +158,14 @@
       }
     });
   </script>
+  <script>
+    const dniUsuario = localStorage.getItem("dniUsuario");
+    console.log("DNI cargado desde localStorage:", dniUsuario); // <-- AÑADIDO
+    if (!dniUsuario) {
+      alert("No has iniciado sesión. Redirigiendo al login.");
+      window.location.href = "/login";
+    }
+  </script>
 </body>
 
 </html>
-

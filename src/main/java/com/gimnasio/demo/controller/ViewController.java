@@ -100,6 +100,11 @@ public class ViewController {
         return "VA_Inicio"; // corresponde a templates/miVistaAdmin.html
     }
 
+    @GetMapping("/VistaSuscripciones")
+    public String Boletas() {
+        return "VA_ResumenBoletas";
+    }
+
     // … si tienes más páginas (por ejemplo, US_Anuncios, US_PlanesYPrecios, etc.),
     // solo agrega más @GetMapping que devuelvan el nombre de la plantilla.
 }
