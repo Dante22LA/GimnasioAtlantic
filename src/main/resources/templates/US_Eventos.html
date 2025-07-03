@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eventos del Gimnasio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="p-3 bg-dark text-white text-center">
+    <h1>Eventos Gratuitos del Gimnasio</h1>
+  </header>
+
+  <main class="container mt-5">
+    <div id="alerta" class="alert d-none" role="alert"></div>
+    <div class="row" id="contenedor-eventos">
+      <!-- Eventos se cargan aquí dinámicamente -->
+    </div>
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    AtlanticGym © 2025
+  </footer>
+
+  <script>
+    async function cargarEventos() {
+      const documento = localStorage.getItem('dniUsuario');
+      if (!documento) {
+        alert("No has iniciado sesión. Redirigiendo al login...");
+        window.location.href = "/login";
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/eventos?documento=${documento}`);
+        if (!response.ok) throw new Error('No se pudieron obtener los eventos');
+
+        const eventos = await response.json();
+        const contenedor = document.getElementById('contenedor-eventos');
+        contenedor.innerHTML = '';
+
+        if (eventos.length === 0) {
+          contenedor.innerHTML = '<p class="text-center">No hay eventos disponibles por ahora.</p>';
+          return;
+        }
+
+        eventos.forEach(evento => {
+          const tarjeta = document.createElement('div');
+          tarjeta.className = 'col-md-4 mb-4';
+
+          // Formatear la fecha como yyyy-mm-dd
+          const fecha = evento.fechaEvento.split('T')[0];
+
+          const botonAccion = evento.inscrito
+            ? `<button class="btn btn-danger w-100" onclick="desinscribirse(${evento.idEvento})">Anular inscripción</button>`
+            : `<button class="btn btn-success w-100" ${evento.cupos <= 0 ? 'disabled' : ''} onclick="inscribirse(${evento.idEvento})">
+                ${evento.cupos > 0 ? 'Inscribirse' : 'Evento lleno'}
+              </button>`;
+
+          tarjeta.innerHTML = `
+            <div class="card h-100 shadow">
+              <div class="card-body">
+                <h5 class="card-title">${evento.titulo}</h5>
+                <p class="card-text">${evento.descripcion || 'Sin descripción'}</p>
+                <p><strong>Fecha:</strong> ${fecha}</p>
+                <p><strong>Cupos disponibles:</strong> ${evento.cupos}</p>
+                ${botonAccion}
+              </div>
+            </div>
+          `;
+
+          contenedor.appendChild(tarjeta);
+        });
+      } catch (error) {
+        alert("Error al cargar eventos: " + error.message);
+      }
+    }
+
+    async function inscribirse(idEvento) {
+      const documento = localStorage.getItem('dniUsuario');
+      try {
+        const res = await fetch(`/api/asistencias?idEvento=${idEvento}&documento=${documento}`, {
+          method: 'POST'
+        });
+        const msg = await res.text();
+        mostrarAlerta(msg, res.ok);
+        cargarEventos();
+      } catch (err) {
+        mostrarAlerta("Error al inscribirse", false);
+      }
+    }
+
+    async function desinscribirse(idEvento) {
+      const documento = localStorage.getItem('dniUsuario');
+      try {
+        const res = await fetch(`/api/asistencias/${idEvento}/${documento}`, {
+          method: 'DELETE'
+        });
+        const msg = await res.text();
+        mostrarAlerta(msg, res.ok);
+        cargarEventos();
+      } catch (err) {
+        mostrarAlerta("Error al anular inscripción", false);
+      }
+    }
+
+    function mostrarAlerta(mensaje, exito) {
+      const alerta = document.getElementById('alerta');
+      alerta.className = `alert ${exito ? 'alert-success' : 'alert-danger'}`;
+      alerta.textContent = mensaje;
+      alerta.classList.remove('d-none');
+    }
+
+    window.addEventListener('DOMContentLoaded', cargarEventos);
+  </script>
+</body>
+</html>
+

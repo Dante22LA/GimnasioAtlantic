@@ -105,6 +105,21 @@ public class ViewController {
         return "VA_ResumenBoletas";
     }
 
+    @GetMapping("/eventos")
+    public String Eventos() {
+        return "US_Eventos";
+    }
+
+    @GetMapping("/eventosAdmin")
+    public String AdminEventos() {
+        return "VA_Eventos";
+    }
+
+    @GetMapping("/asistencias")
+    public String Asistencias() {
+        return "VA_Asistencias";
+    }
+
     // … si tienes más páginas (por ejemplo, US_Anuncios, US_PlanesYPrecios, etc.),
     // solo agrega más @GetMapping que devuelvan el nombre de la plantilla.
 }

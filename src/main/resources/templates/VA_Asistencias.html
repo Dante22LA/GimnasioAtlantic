@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Asistencias</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="bg-dark text-white text-center py-3">
+    <h1>👥 Inscripciones a Eventos</h1>
+  </header>
+
+  <main class="container mt-4">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Documento</th>
+          <th>Nombre del Usuario</th>
+          <th>Evento</th>
+          <th>Fecha de Inscripción</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-asistencias">
+        <!-- Filas dinámicas -->
+      </tbody>
+    </table>
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    AtlanticGym © 2025
+  </footer>
+
+  <script>
+    async function cargarAsistencias() {
+      try {
+        const response = await fetch("/api/asistencias");
+        if (!response.ok) throw new Error("Error al cargar asistencias");
+
+        const asistencias = await response.json();
+        const tabla = document.getElementById("tabla-asistencias");
+        tabla.innerHTML = "";
+
+        asistencias.forEach(asistencia => {
+          const fila = document.createElement("tr");
+
+          fila.innerHTML = `
+            <td>${asistencia.documentoUsuario}</td>
+            <td>${asistencia.nombreUsuario}</td>
+            <td>${asistencia.tituloEvento}</td>
+            <td>${new Date(asistencia.fechaInscripcion).toLocaleString('es-PE', { timeZone: 'America/Lima' })}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="eliminarAsistencia('${asistencia.idEvento}', '${asistencia.documentoUsuario}')">Eliminar</button>
+            </td>
+          `;
+
+          tabla.appendChild(fila);
+        });
+
+      } catch (err) {
+        console.error(err);
+        alert("No se pudieron cargar las asistencias.");
+      }
+    }
+
+    async function eliminarAsistencia(idEvento, documento) {
+      if (!confirm("¿Deseas eliminar esta inscripción?")) return;
+
+      try {
+        const response = await fetch(`/api/asistencias/${idEvento}/${documento}`, {
+          method: "DELETE"
+        });
+
+        if (response.ok) {
+          alert("Inscripción eliminada.");
+          cargarAsistencias();
+        } else {
+          const error = await response.text();
+          alert("Error al eliminar: " + error);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("No se pudo eliminar la inscripción.");
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", cargarAsistencias);
+  </script>
+</body>
+</html>
+
