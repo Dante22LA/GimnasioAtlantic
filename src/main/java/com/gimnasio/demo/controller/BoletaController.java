@@ -17,8 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -33,26 +33,6 @@ public class BoletaController {
 
     @Autowired
     private PlanRepository planRepository;
-
-    // REGISTRAR PAGO
-    @PostMapping("/pago")
-    public ResponseEntity<?> registrarPago(@RequestBody PagoRequest request) {
-        Usuario usuario = usuarioRepository.findById(request.getDocumento()).orElse(null);
-        Plan plan = planRepository.findById(request.getIdPlan()).orElse(null);
-
-        if (usuario == null || plan == null) {
-            return ResponseEntity.status(404).body("Usuario o Plan no encontrado");
-        }
-
-        Boleta boleta = new Boleta();
-        boleta.setDocumentoUsuario(usuario.getDocumento());
-        boleta.setPlan(plan);
-        boleta.setMontoTotal(BigDecimal.valueOf(plan.getPrecio()));
-        boleta.setFechaEmision(new Date());
-
-        boletaRepository.save(boleta);
-        return ResponseEntity.ok("Boleta registrada correctamente");
-    }
 
     // LISTAR TODAS LAS BOLETAS
     @GetMapping("/boletas")
@@ -99,4 +79,32 @@ public class BoletaController {
 
         return resumen;
     }
+
+    @GetMapping("/boletas/{documento}")
+    public List<Boleta> obtenerBoletasPorUsuario(@PathVariable String documento) {
+        return boletaRepository.findByDocumentoUsuario(documento);
+    }
+
+    @GetMapping("/usuarios/{dni}/plan-actual")
+    public ResponseEntity<?> obtenerPlanActual(@PathVariable String dni) {
+        List<Boleta> boletas = boletaRepository.findByDocumentoUsuario(dni);
+        LocalDate hoy = LocalDate.now();
+
+        for (Boleta boleta : boletas) {
+            LocalDate inicio = boleta.getFechaEmision().toInstant()
+                    .atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate fin = inicio.plusMonths(boleta.getPlan().getDuracionMeses());
+
+            if (!hoy.isBefore(inicio) && !hoy.isAfter(fin)) {
+                Map<String, Object> resp = new HashMap<>();
+                resp.put("idBoleta", boleta.getIdBoleta());
+                resp.put("nombrePlan", boleta.getPlan().getNombre());
+                resp.put("fechaInicio", inicio.toString());
+                resp.put("fechaFin", fin.toString());
+                return ResponseEntity.ok(resp);
+            }
+        }
+        return ResponseEntity.status(404).body("No hay plan activo");
+    }
+
 }

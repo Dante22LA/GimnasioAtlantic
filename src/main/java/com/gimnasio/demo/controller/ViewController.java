@@ -120,6 +120,17 @@ public class ViewController {
         return "VA_Asistencias";
     }
 
+    @GetMapping("/Anuncios")
+    public String Anuncios() {
+        return "US_Anuncios";
+    }
+
+    @GetMapping("/TablaUsuarios")
+    public String TablaUsuarios() {
+        return "tablaUsuarios";
+    }
+
+
     // … si tienes más páginas (por ejemplo, US_Anuncios, US_PlanesYPrecios, etc.),
     // solo agrega más @GetMapping que devuelvan el nombre de la plantilla.
 }

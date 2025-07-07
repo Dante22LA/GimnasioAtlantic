@@ -129,7 +129,7 @@
       e.target.value = value;
     });
 
-    // Enviar pago
+    // Enviar pago y descargar PDF
     document.getElementById("pagoForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
@@ -146,19 +146,32 @@
       };
 
       try {
-        const response = await fetch("/api/pagos", {
+        const response = await fetch("/api/pagos/pago-pdf", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
 
-        if (response.ok) {
-          alert("✅ Pago realizado exitosamente.");
-          window.location.href = "/datos-usuario";
-        } else {
+        if (!response.ok) {
           const errorText = await response.text();
           alert("❌ Error al procesar el pago: " + errorText);
+          return;
         }
+
+        // Descargar boleta en PDF
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "boleta.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+        alert("✅ Pago realizado y boleta descargada.");
+        window.location.href = "/datos-usuario";
+
       } catch (err) {
         alert("❌ Error de conexión.");
         console.error(err);

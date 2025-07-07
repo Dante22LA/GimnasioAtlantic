@@ -11,7 +11,7 @@
     }
 
     .card {
-      max-width: 500px;
+      max-width: 520px;
       margin: auto;
       margin-top: 60px;
       padding: 20px;
@@ -22,34 +22,39 @@
       color: #ccc;
     }
 
-    .yape-section {
-      display: none;
-    }
-
-    .tarjeta-section {
+    .hidden {
       display: none;
     }
   </style>
 </head>
 
 <body>
-
   <div class="card">
     <h4 class="text-center mb-4">💳 Pago del Plan B</h4>
 
     <form id="pagoForm">
-      <!-- Método de Pago -->
+      <!-- Método de pago -->
       <div class="mb-3">
-        <label for="metodoPago" class="form-label">Método de Pago</label>
-        <select id="metodoPago" class="form-select" required>
+        <label for="tipoPago" class="form-label">Selecciona método de pago</label>
+        <select id="tipoPago" class="form-select" required>
           <option value="">Seleccionar</option>
-          <option value="tarjeta">Tarjeta</option>
-          <option value="yape">Yape</option>
+          <option value="tarjeta">💳 Tarjeta</option>
+          <option value="yape">📱 Yape</option>
         </select>
       </div>
 
-      <!-- TARJETA -->
-      <div class="tarjeta-section">
+      <!-- FORMULARIO TARJETA -->
+      <div id="formTarjeta" class="hidden">
+        <div class="mb-3">
+          <label for="metodoPago" class="form-label">Tipo de Tarjeta</label>
+          <select id="metodoPago" class="form-select">
+            <option value="">Seleccionar</option>
+            <option value="visa">Visa</option>
+            <option value="mastercard">MasterCard</option>
+            <option value="amex">American Express</option>
+          </select>
+        </div>
+
         <div class="mb-3">
           <label for="nombreTitular" class="form-label">Nombre del Titular</label>
           <input type="text" class="form-control" id="nombreTitular" placeholder="Juan Pérez">
@@ -63,8 +68,7 @@
         <div class="row mb-3">
           <div class="col">
             <label for="vencimiento" class="form-label">Vencimiento</label>
-            <input type="text" class="form-control" id="vencimiento" placeholder="MM/AA"
-              pattern="^(0[1-9]|1[0-2])\/\d{2}$">
+            <input type="text" class="form-control" id="vencimiento" placeholder="MM/AA" pattern="^(0[1-9]|1[0-2])\/\d{2}$">
           </div>
           <div class="col">
             <label for="cvv" class="form-label">CVV</label>
@@ -73,32 +77,49 @@
         </div>
       </div>
 
-      <!-- YAPE -->
-      <div class="yape-section">
+      <!-- FORMULARIO YAPE -->
+      <div id="formYape" class="hidden">
         <div class="mb-3">
-          <label for="numeroYape" class="form-label">Número Yape</label>
-          <input type="text" class="form-control" id="numeroYape" placeholder="Ej: 987654321" pattern="\d{9}">
+          <label for="numeroYape" class="form-label">Número asociado a Yape</label>
+          <input type="text" class="form-control" id="numeroYape" placeholder="999 999 999" maxlength="11">
         </div>
+
         <div class="mb-3">
-          <label for="codigoYape" class="form-label">Código de Verificación</label>
-          <input type="text" class="form-control" id="codigoYape" placeholder="Ej: 123456" pattern="\d{6}">
+          <label for="codigoVerificacion" class="form-label">Código de Verificación</label>
+          <input type="text" class="form-control" id="codigoVerificacion" placeholder="123456" maxlength="6">
         </div>
       </div>
 
+      <!-- Botón -->
       <button type="submit" class="btn btn-primary w-100" id="btnPagar">Pagar</button>
     </form>
   </div>
 
-  <!-- Scripts -->
   <script>
-    // Mostrar u ocultar campos según método de pago
-    const metodoPago = document.getElementById("metodoPago");
-    metodoPago.addEventListener("change", function () {
-      document.querySelector(".tarjeta-section").style.display = metodoPago.value === "tarjeta" ? "block" : "none";
-      document.querySelector(".yape-section").style.display = metodoPago.value === "yape" ? "block" : "none";
+    // Mostrar formulario según el tipo de pago
+    const tipoPago = document.getElementById("tipoPago");
+    const formTarjeta = document.getElementById("formTarjeta");
+    const formYape = document.getElementById("formYape");
+
+    tipoPago.addEventListener("change", () => {
+      formTarjeta.classList.add("hidden");
+      formYape.classList.add("hidden");
+
+      if (tipoPago.value === "tarjeta") {
+        formTarjeta.classList.remove("hidden");
+      } else if (tipoPago.value === "yape") {
+        formYape.classList.remove("hidden");
+      }
     });
 
-    // Formato automático para vencimiento
+    // Formatear número de tarjeta
+    const tarjetaInput = document.getElementById("numeroTarjeta");
+    tarjetaInput.addEventListener("input", () => {
+      let value = tarjetaInput.value.replace(/\D/g, "").substring(0, 16);
+      tarjetaInput.value = value.match(/.{1,4}/g)?.join("-").substring(0, 19) || "";
+    });
+
+    // Formatear vencimiento
     document.getElementById('vencimiento').addEventListener('input', function (e) {
       let value = e.target.value.replace(/[^\d]/g, '');
       if (value.length >= 2) {
@@ -107,30 +128,7 @@
       e.target.value = value;
     });
 
-    // Formatear número de tarjeta con guiones
-    const tarjetaInput = document.getElementById("numeroTarjeta");
-    tarjetaInput.addEventListener("input", () => {
-      let value = tarjetaInput.value.replace(/\D/g, "").substring(0, 16);
-      tarjetaInput.value = value.match(/.{1,4}/g)?.join("-").substring(0, 19) || "";
-    });
-
-    // Cargar monto real desde el backend
-    async function cargarPrecioPlan() {
-      try {
-        const response = await fetch("/api/planes/2");
-        if (!response.ok) throw new Error("No se pudo obtener el plan");
-
-        const plan = await response.json();
-        document.getElementById("btnPagar").textContent = `Pagar S/${plan.precio.toFixed(2)}`;
-      } catch (e) {
-        console.error("Error al cargar el precio:", e);
-        document.getElementById("btnPagar").textContent = "Pagar (Error)";
-      }
-    }
-
-    cargarPrecioPlan();
-
-    // Enviar pago
+    // Enviar pago y descargar PDF
     document.getElementById("pagoForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
@@ -143,37 +141,68 @@
 
       const payload = {
         documento: documento,
-        idPlan: 2 // PLAN B
+        idPlan: 2 // Plan B
       };
 
       try {
-        const response = await fetch("/api/pagos", {
+        const response = await fetch("/api/pagos/pago-pdf", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
 
-        if (response.ok) {
-          alert("✅ Pago registrado con éxito.");
-          window.location.href = "/datos-usuario";
-        } else {
+        if (!response.ok) {
           const errorText = await response.text();
           alert("❌ Error al procesar el pago: " + errorText);
+          return;
         }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "boleta-planB.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+        alert("✅ Pago realizado y boleta descargada.");
+        window.location.href = "/datos-usuario";
+
       } catch (err) {
         alert("❌ Error de conexión.");
         console.error(err);
       }
     });
   </script>
+
+  <script>
+    async function cargarPrecioPlan() {
+      try {
+        const response = await fetch("/api/planes/2");
+        if (!response.ok) throw new Error("No se pudo obtener el plan");
+
+        const plan = await response.json();
+        const boton = document.getElementById("btnPagar");
+        boton.textContent = `Pagar S/${plan.precio.toFixed(2)}`;
+      } catch (e) {
+        console.error("Error al cargar el precio:", e);
+        document.getElementById("btnPagar").textContent = "Pagar (Error)";
+      }
+    }
+
+    cargarPrecioPlan();
+  </script>
+
   <script>
     const dniUsuario = localStorage.getItem("dniUsuario");
-    console.log("DNI cargado desde localStorage:", dniUsuario); // <-- AÑADIDO
     if (!dniUsuario) {
       alert("No has iniciado sesión. Redirigiendo al login.");
       window.location.href = "/login";
     }
   </script>
+
 </body>
 
 </html>

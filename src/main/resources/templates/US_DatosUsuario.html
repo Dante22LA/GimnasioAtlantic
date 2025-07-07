@@ -38,7 +38,7 @@
         <ul>
           <li><a href="/datos-usuario" class="active">Datos Usuario</a></li>
           <li><a href="/" class="active">Inicio</a></li>
-          <li><a href="US_Anuncios.html" class="active">Contenido</a></li>
+          <li><a href="/Anuncios" class="active">Contenido</a></li>
           <li><a href="/planes" class="active">Planes y Precios</a></li>
           <li><a href="/admin-panel" class="active">Admin</a></li>
         </ul>
@@ -61,6 +61,17 @@
     <section id="contact" class="contact section">
       <div class="container" data-aos="fade-up" data-aos-delay="100">
         <div class="row gy-4">
+          <div id="planActualContainer" style="display:none;">
+            <hr>
+            <h3>Plan Actual</h3>
+            <p id="nombrePlan"></p>
+            <p><strong>De:</strong> <span id="fechaInicio"></span></p>
+            <p><strong>Hasta:</strong> <span id="fechaFin"></span></p>
+            <button id="btnEliminarPlan" class="btn btn-danger btn-sm">Eliminar Suscripción</button>
+            <hr>
+          </div>
+
+
           <div class="col-lg-4">
             <hr>
             <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
@@ -207,7 +218,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", async function () {
-      
+
 
       // Función para cargar los datos del usuario
       async function cargarDatosUsuario(dni) {
@@ -250,7 +261,59 @@
       }
 
       // Llamar a la función para cargar datos al cargar la página
-      cargarDatosUsuario(dniUsuario);
+      async function obtenerYMostrarPlanActual() {
+        try {
+          const resp = await fetch(`/api/usuarios/${dniUsuario}/plan-actual`);
+          if (!resp.ok) return;
+          const data = await resp.json();
+
+          document.getElementById("planActualContainer").style.display = "block";
+          document.getElementById("nombrePlan").textContent = data.nombrePlan;
+          document.getElementById("fechaInicio").textContent = new Date(data.fechaInicio).toLocaleDateString();
+          document.getElementById("fechaFin").textContent = new Date(data.fechaFin).toLocaleDateString();
+
+          document.getElementById("btnEliminarPlan").onclick = async () => {
+            if (!confirm("¿Eliminar suscripción?")) return;
+
+            const r = await fetch(`/api/boletas/${data.idBoleta}`, { method: "DELETE" });
+            if (r.ok) {
+              alert("Suscripción eliminada.");
+              location.reload();
+            } else alert("Error al eliminar: " + (await r.text()));
+          };
+        } catch (e) {
+          console.error("No plan activo:", e);
+        }
+      }
+      window.addEventListener("DOMContentLoaded", () => {
+        cargarDatosUsuario(dniUsuario);
+        obtenerYMostrarPlanActual();
+      });
+
+      async function cancelarSuscripcion(idBoleta) {
+        const confirmar = confirm("¿Estás seguro de cancelar tu suscripción activa?");
+        if (!confirmar) return;
+
+        try {
+          const response = await fetch(`/api/boletas/${idBoleta}`, {
+            method: "DELETE"
+          });
+
+          if (response.ok) {
+            alert("Tu suscripción ha sido cancelada.");
+            location.reload(); // Recargar la página para ocultar plan activo
+          } else {
+            const msg = await response.text();
+            alert("Error al cancelar la suscripción: " + msg);
+          }
+        } catch (error) {
+          alert("No se pudo cancelar la suscripción.");
+          console.error("Error:", error);
+        }
+      }
+
+      cargarPlanActivo(dniUsuario);
+
 
       // Manejar el envío del formulario de actualización
       document.getElementById("updateForm").addEventListener("submit", async function (e) {
@@ -307,12 +370,56 @@
   </script>
   <script>
     const dniUsuario = localStorage.getItem("dniUsuario");
-      console.log("DNI cargado desde localStorage:", dniUsuario); // <-- AÑADIDO
-      if (!dniUsuario) {
-        alert("No has iniciado sesión. Redirigiendo al login.");
-        window.location.href = "/login";
-      }
+    console.log("DNI cargado desde localStorage:", dniUsuario); // <-- AÑADIDO
+    if (!dniUsuario) {
+      alert("No has iniciado sesión. Redirigiendo al login.");
+      window.location.href = "/login";
+    }
   </script>
+  <script>
+    async function cargarPlanActual() {
+      try {
+        const response = await fetch(`/api/boletas/plan-activo/${dniUsuario}`);
+        if (!response.ok) {
+          document.getElementById("sinPlanContainer").style.display = "block";
+          return;
+        }
+
+        const data = await response.json();
+        document.getElementById("nombrePlan").innerText = data.nombre;
+        document.getElementById("fechaInicio").innerText = data.fechaInicio;
+        document.getElementById("fechaFin").innerText = data.fechaFin;
+        document.getElementById("planActualContainer").style.display = "block";
+      } catch (error) {
+        console.error("Error al cargar plan actual:", error);
+      }
+    }
+
+    async function cancelarPlan() {
+      const confirmacion = confirm("¿Estás seguro que deseas cancelar tu suscripción actual?");
+      if (!confirmacion) return;
+
+      try {
+        const res = await fetch(`/api/boletas/eliminar-plan-actual/${dniUsuario}`, {
+          method: "DELETE"
+        });
+
+        if (res.ok) {
+          alert("Suscripción cancelada.");
+          window.location.reload();
+        } else {
+          alert("No se pudo cancelar la suscripción.");
+        }
+      } catch (error) {
+        console.error("Error al cancelar el plan:", error);
+        alert("Error al cancelar la suscripción.");
+      }
+    }
+
+    // Ejecuta al cargar
+    cargarPlanActual();
+  </script>
+
   <script src="assets/js/session.js"></script>
 </body>
 
