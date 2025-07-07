@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/pagos")
@@ -35,7 +34,7 @@ public class PagoController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(PagoController.class);
+    //private static final Logger logger = LoggerFactory.getLogger(PagoController.class);
 
     @PostMapping("/pago-pdf")
     public ResponseEntity<?> registrarPagoConPDF(@RequestBody PagoRequest request) {

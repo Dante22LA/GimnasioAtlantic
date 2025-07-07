@@ -1,12 +1,9 @@
 package com.gimnasio.demo.controller;
 
 import com.gimnasio.demo.model.Boleta;
-import com.gimnasio.demo.model.Plan;
-import com.gimnasio.demo.model.Usuario;
-import com.gimnasio.demo.payload.PagoRequest;
 import com.gimnasio.demo.repository.BoletaRepository;
-import com.gimnasio.demo.repository.PlanRepository;
-import com.gimnasio.demo.repository.UsuarioRepository;
+//import com.gimnasio.demo.repository.PlanRepository;
+//import com.gimnasio.demo.repository.UsuarioRepository;
 import com.gimnasio.demo.util.BoletaUtils;
 import com.gimnasio.demo.payload.ResumenBoletaDTO; // Asegúrate de importar tu DTO
 import java.util.ArrayList;
@@ -27,12 +24,6 @@ public class BoletaController {
 
     @Autowired
     private BoletaRepository boletaRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
-    private PlanRepository planRepository;
 
     // LISTAR TODAS LAS BOLETAS
     @GetMapping("/boletas")

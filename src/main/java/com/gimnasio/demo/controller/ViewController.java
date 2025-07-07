@@ -1,18 +1,12 @@
 // src/main/java/com/gimnasio/demo/controller/ViewController.java
 package com.gimnasio.demo.controller;
 
-import com.gimnasio.demo.model.Plan;
 import com.gimnasio.demo.model.Usuario;
 import com.gimnasio.demo.repository.UsuarioRepository;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
