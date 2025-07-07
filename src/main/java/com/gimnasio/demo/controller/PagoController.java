@@ -10,7 +10,6 @@ import com.gimnasio.demo.repository.UsuarioRepository;
 import com.gimnasio.demo.util.BoletaUtils;
 import com.gimnasio.demo.util.PdfGeneratorUtil;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
