@@ -31,24 +31,26 @@
 
   <header id="header" class="header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
-      <a href="US_Inicio.html" class="logo d-flex align-items-center me-auto">
+      <a href="/" class="logo d-flex align-items-center me-auto">
         <img src="imgWeb/logo.png" alt="">
       </a>
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="/datos-usuario" class="active">Datos Usuario</a></li>
           <li><a href="/" class="active">Inicio</a></li>
+          <li><a href="/eventos" class="active">Eventos</a></li>
+          <li><a href="/datos-usuario" class="active">Datos Usuario</a></li>         
           <li><a href="/Anuncios" class="active">Contenido</a></li>
           <li><a href="/planes" class="active">Planes y Precios</a></li>
           <li><a href="/admin-panel" class="active">Admin</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        <a id="btnLogin" class="btn-getstarted" href="/login" style="display: none;">Login</a>
-        <a id="btnLogout" class="btn-getstarted" href="#" onclick="cerrarSesion()" style="display: none;">Cerrar
-          Sesión</a>
       </nav>
+      <a id="btnLogin" class="btn-getstarted" href="/login" style="display: none;">Login</a>
+      <a id="btnLogout" class="btn-getstarted" href="#" onclick="cerrarSesion()" style="display: none;">Cerrar
+        Sesión</a>
     </div>
   </header>
+
 
   <main class="main">
 
@@ -157,7 +159,6 @@
   </main>
 
   <footer id="footer" class="footer dark-background">
-
     <div class="container footer-top">
       <div class="row gy-4">
         <div class="col-lg-4 col-md-6 footer-about">
@@ -190,7 +191,6 @@
         </div>
       </div>
     </div>
-
     <div class="container copyright text-center mt-4">
       <p>© <span>Copyright</span> <strong class="px-1 sitename">AtlanticGym</strong> <span>Todos los derechos
           reservados.</span></p>
@@ -199,8 +199,8 @@
           Norte</a>
       </div>
     </div>
-
   </footer>
+
 
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>

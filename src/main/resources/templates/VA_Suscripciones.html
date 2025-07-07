@@ -1,51 +1,143 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Suscripciones - Boletas</title>
-  <link href="/assets/css/main.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Poppins:wght@300;400;600&family=Raleway:wght@300;400;600&display=swap"
+    rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/css/main.css" rel="stylesheet">
 </head>
 
-<body>
-  <header class="p-3 bg-dark text-white text-center">
-    <h1>Historial de Suscripciones</h1>
+<body class="index-page">
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+      <a href="/" class="logo d-flex align-items-center me-auto">
+        <img src="imgWeb/logo.png" alt="">
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="/" class="active">Inicio</a></li>
+          <li><a href="/eventos" class="active">Eventos</a></li>
+          <li><a href="/datos-usuario" class="active">Datos Usuario</a></li>
+          <li><a href="/Anuncios" class="active">Contenido</a></li>
+          <li><a href="/planes" class="active">Planes y Precios</a></li>
+          <li><a href="/admin-panel" class="active">Admin</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+      <a id="btnLogin" class="btn-getstarted" href="/login" style="display: none;">Login</a>
+      <a id="btnLogout" class="btn-getstarted" href="#" onclick="cerrarSesion()" style="display: none;">Cerrar
+        Sesión</a>
+    </div>
   </header>
 
-  <main class="container mt-5">
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>ID Boleta</th>
-          <th>Documento</th>
-          <th>ID Plan</th>
-          <th><strong>Nombre del Plan</strong></th>
-          <th>Fecha</th>
-          <th>Monto</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-
-      <tbody id="tabla-boletas">
-        <!-- Aquí se cargan las boletas dinámicamente -->
-      </tbody>
-    </table>
-
-    <!-- BOTÓN EXPORTAR A EXCEL -->
-    <div class="text-end mt-3">
-      <a href="/api/boletas/exportar" class="btn btn-success">
-        📥 Exportar a Excel
-      </a>
+  <main class="main">
+    <div class="page-title light-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Suscripciones</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="/TablaUsuarios">Administrar Usuarios</a></li>
+            <li><a href="/precios">Administrar Precios</a></li>
+            <li><a href="/suscripciones" class="active">Suscripciones</a></li>
+            <li><a href="/VistaSuscripciones">ResumenSuscripciones</a></li>
+            <li><a href="/eventosAdmin">Eventos</a></li>
+            <li><a href="/asistencias">Asistencias</a></li>
+          </ol>
+        </nav>
+      </div>
     </div>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="mb-4 text-center">📄 Resumen de Suscripciones</h2>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark text-center">
+              <tr>
+                <th>ID Boleta</th>
+                <th>Documento</th>
+                <th>ID Plan</th>
+                <th>Nombre del Plan</th>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-boletas" class="text-center">
+              <!-- Boletas dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="text-end mt-3">
+          <a href="/api/boletas/exportar" class="btn btn-success">
+            📥 Exportar a Excel
+          </a>
+        </div>
+      </div>
+    </section>
   </main>
 
+  <footer id="footer" class="footer dark-background mt-5">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a class="logo d-flex align-items-center">
+            <span class="sitename">AtlanticGym</span>
+          </a>
+          <div class="social-links d-flex mt-4">
+            <a href="https://www.tiktok.com/@atlantic.gym8"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.facebook.com/Antlanticgym"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.instagram.com/atlanticgm/"><i class="bi bi-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a class="logo d-flex align-items-center">
+            <span class="sitename">Horario de Atención</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>Lunes a Sábado 6:00 AM - 10:00 PM</p>
+            <p>Domingo 7:00 AM - 1:00 PM</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a class="logo d-flex align-items-center">
+            <span class="sitename">Contacto</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>Teléfono: +51 964 305 001</p>
+            <p>Email: atlanticgym29@gmail.com</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <footer class="bg-dark text-white text-center py-3 mt-5">
-    AtlanticGym © 2025
+    <div class="container copyright text-center mt-4">
+      <p>© <strong class="px-1 sitename">AtlanticGym</strong> Todos los derechos reservados.</p>
+      <div class="credits">
+        Diseñado por <a href="#">Grupo2</a> • Publicado en <a href="#">Universidad UTP</a> • Sede <a href="#">Lima
+          Norte</a>
+      </div>
+    </div>
   </footer>
 
+  <!-- JS scripts -->
   <script>
     async function cargarBoletas() {
       try {
@@ -59,17 +151,15 @@
         boletas.forEach(boleta => {
           const fila = document.createElement("tr");
           fila.innerHTML = `
-  <td>${boleta.idBoleta}</td>
-  <td>${boleta.documentoUsuario}</td>
-  <td>${boleta.plan.idPlan}</td>
-  <td>${boleta.plan.nombre}</td>
-  <td>${new Date(boleta.fechaEmision).toLocaleString()}</td>
-  <td>S/. ${boleta.montoTotal.toFixed(2)}</td>
-  <td>
-    <button class="btn btn-danger btn-sm" onclick="eliminarBoleta(${boleta.idBoleta})">Eliminar</button>
-  </td>
-`;
-
+            <td>${boleta.idBoleta}</td>
+            <td>${boleta.documentoUsuario}</td>
+            <td>${boleta.plan.idPlan}</td>
+            <td>${boleta.plan.nombre}</td>
+            <td>${new Date(boleta.fechaEmision).toLocaleString()}</td>
+            <td>S/. ${boleta.montoTotal.toFixed(2)}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="eliminarBoleta(${boleta.idBoleta})">Eliminar</button>
+            </td>`;
           tabla.appendChild(fila);
         });
       } catch (err) {
@@ -77,17 +167,14 @@
         alert("No se pudieron cargar las boletas.");
       }
     }
+
     async function eliminarBoleta(idBoleta) {
-      if (!confirm("¿Estás seguro de eliminar esta boleta?")) return;
-
+      if (!confirm("¿Seguro que deseas eliminar esta boleta?")) return;
       try {
-        const response = await fetch(`/api/boletas/${idBoleta}`, {
-          method: "DELETE"
-        });
-
+        const response = await fetch(`/api/boletas/${idBoleta}`, { method: "DELETE" });
         if (response.ok) {
           alert("Boleta eliminada correctamente.");
-          cargarBoletas(); // Recargar tabla
+          cargarBoletas();
         } else {
           const msg = await response.text();
           alert("Error al eliminar boleta: " + msg);
@@ -98,9 +185,17 @@
       }
     }
 
+    const dniUsuario = localStorage.getItem("dniUsuario");
+    if (!dniUsuario) {
+      alert("No has iniciado sesión. Redirigiendo al login.");
+      window.location.href = "/login";
+    }
 
     window.addEventListener("DOMContentLoaded", cargarBoletas);
   </script>
+
+  <script src="assets/js/session.js"></script>
+  <script src="assets/js/adminOnly.js"></script>
 </body>
 
 </html>
